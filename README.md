@@ -1,3 +1,10 @@
+Hello, tzakrzw here. So I made some edits to the octoprint so that it would work better with the printers / application of the Clemson Makerspace. Most of the work was supposed to happen via plugins, but some of the serial communcation stuff needed to edit the source (dang action commands), so here it is. Also, b/c the source is being edited anyway, added support for other custom stuff in the comm.py file. Happy printing and Go tigers
+
+(Also, the printers this is made for is Lulzbots)
+
+
+
+
 <p align="center"><img src="https://octoprint.org/assets/img/logo.png" alt="OctoPrint's logo" /></p>
 
 <h1 align="center">OctoPrint</h1>
