@@ -2,6 +2,8 @@ Hello, tzakrzw here. So I made some edits to the octoprint so that it would work
 
 (Also, the printers this is made for is Lulzbots)
 
+(Also, also, the reason for fork is so that can keep comm.py file in line with main branch -> mainly use scp to move just that file to pis)
+
 
 
 
