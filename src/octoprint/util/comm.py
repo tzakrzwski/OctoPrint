@@ -1,3 +1,7 @@
+#EDITS BY TZAKRZW - 6/28/2021
+#2240 -> Disabled the handling of action commands
+#2893 -> Changed method for handling paused prints
+
 # -*- coding: utf-8 -*-
 from __future__ import absolute_import, division, print_function, unicode_literals
 
@@ -2234,7 +2238,10 @@ class MachineCom(object):
                         continue
 
                 ##~~ debugging output handling
-                elif line.startswith("//"):
+                #TZAKRZW edit
+                #Yeah so we are just gona disable this feature b/c it creates more
+                #problems then its worth -> use M27 C to check if paused or not
+                elif line.startswith("//") and False:
                     debugging_output = line[2:].strip()
                     if debugging_output.startswith("action:"):
                         action_command = debugging_output[len("action:") :].strip()
@@ -2883,13 +2890,27 @@ class MachineCom(object):
                         and not self.isStarting()
                         and not self.isFinishing()
                     ):
-                        self._consecutive_not_sd_printing += 1
-                        if (
-                            self._consecutive_not_sd_printing
-                            > self._consecutive_not_sd_printing_maximum
-                        ):
-                            # something went wrong, printer is reporting that we actually are not printing right now...
-                            self.cancelPrint(external_sd=True)
+                        #TZAKRZW edit
+                        #Okay, so we can use M27 C to check if there is a currently selected file, meaning we still printing (just paused)
+                        self.sendCommand("M27 C", part_of_job=True)
+##                        self._consecutive_not_sd_printing += 1
+##                        if (
+##                            self._consecutive_not_sd_printing
+##                            > self._consecutive_not_sd_printing_maximum
+##                            
+##                        ):
+##                            # something went wrong, printer is reporting that we actually are not printing right now...
+##                            self.cancelPrint(external_sd=True)
+                    #TZAKRZW edit
+                    #And then to check for "M27 C" response to see if we are just paused
+                    elif (
+                        "Current file: (no file)" in line
+                        and self.isSdPrinting()
+                    ):
+                        #If there is no file, then cancel
+                        self.cancelPrint(external_sd=True)
+                        
+                    
                     elif "File opened" in line and not self._ignore_select:
                         # answer to M23, at least on Marlin, Repetier and Sprinter: "File opened:%s Size:%d"
                         match = regex_sdFileOpened.search(line)
